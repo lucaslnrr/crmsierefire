@@ -1,0 +1,6 @@
+export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
+import { getDB } from '@/lib/db'
+import { getUserFromCookie } from '@/lib/auth'
+export async function GET(){ const db=await getDB(); const [rows]=await db.execute("SELECT p.*, c.nome as company_nome FROM proposals p JOIN companies c ON c.id=p.company_id ORDER BY p.id DESC"); await db.end(); return new Response(JSON.stringify(rows), { headers:{'Content-Type':'application/json'} }) }
+export async function POST(req){ const user=getUserFromCookie(); const { company_id, description, value, items } = await req.json(); const db=await getDB(); const [r]=await db.execute("INSERT INTO proposals (company_id, created_by, description, value, status) VALUES (?,?,?,?, 'ENVIADA')",[company_id,user?.id||null,description||null,value||0]); const pid=r.insertId; if(Array.isArray(items)){ for(const it of items){ if(!it.service_id) continue; await db.execute("INSERT INTO proposal_items (proposal_id, service_id, qty, price, due_date) VALUES (?,?,?,?,?)",[pid,it.service_id,it.qty||1,it.price||0,it.due_date||null]) } } await db.end(); return new Response(JSON.stringify({ok:true,id:pid}), { headers:{'Content-Type':'application/json'} }) }
