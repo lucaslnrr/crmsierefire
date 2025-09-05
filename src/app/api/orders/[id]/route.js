@@ -8,11 +8,13 @@ export async function GET(req, { params }){
   const db = await getDB()
   try {
     const [[o]] = await db.execute(`
-      SELECT so.*, c.nome AS company_nome,
+      SELECT so.*, c.nome AS company_nome, ct.id AS contract_id, p.id AS proposal_id,
              DATE_FORMAT(so.issue_date, '%Y-%m-%d') AS issue_date_fmt,
              DATE_FORMAT(so.due_date,   '%Y-%m-%d') AS due_date_fmt
       FROM sales_orders so
       JOIN companies c ON c.id = so.company_id
+      LEFT JOIN contracts ct ON ct.sales_order_id = so.id
+      LEFT JOIN proposals p ON p.id = so.proposal_id
       WHERE so.id=?
     `, [id])
 

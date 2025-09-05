@@ -59,6 +59,7 @@ export default function OrderDetail({ params }){
         <div><div className="hdr">Empresa</div><div>{order.company_nome}</div></div>
         <div><div className="hdr">Emissão</div><div>{order.issue_date_fmt || order.issue_date}</div></div>
         <div><div className="hdr">Total</div><div>R$ {Number(order.total_value||0).toFixed(2)}</div></div>
+        <div><div className="hdr">Contrato</div><div>{order.contract_id ? <a className="sf-btn" href={`/contracts/${order.contract_id}`}>Contrato #{order.contract_id}</a> : '—'}</div></div>
         <div>
           <label className="hdr">Vencimento</label>
           <input type="date" className="sf-input" defaultValue={order.due_date_fmt || order.due_date || ''} onChange={e=>order._due=e.target.value} />
