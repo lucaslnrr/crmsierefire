@@ -1,18 +1,22 @@
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
+
+import { NextResponse } from 'next/server'
 import { getDB } from '@/lib/db'
 import bcrypt from 'bcryptjs'
-import { NextResponse } from 'next/server'
-import { signToken } from '@/lib/auth'
-import cookie from 'cookie'
+import jwt from 'jsonwebtoken'
+
 export async function POST(req){
   const { email, password } = await req.json()
-  if (!email || !password) return NextResponse.json({ error:'Email e senha são obrigatórios' }, { status:400 })
-  const db=await getDB(); const [rows]=await db.execute("SELECT * FROM users WHERE email=? LIMIT 1",[email]); await db.end()
-  const user=rows[0]; if(!user) return NextResponse.json({ error:'Credenciais inválidas' },{ status:401 })
-  const ok = await bcrypt.compare(password, user.password_hash); if(!ok) return NextResponse.json({ error:'Credenciais inválidas' },{ status:401 })
-  if (!['comercial','diretoria'].includes(user.role)) return NextResponse.json({ error:'Acesso negado' },{ status:403 })
-  const token = signToken(user); const res = NextResponse.json({ ok:true })
-  res.headers.set('Set-Cookie', cookie.serialize('token', token, { httpOnly:true, secure:true, sameSite:'lax', path:'/', maxAge:7*24*3600 }))
+  const db = await getDB()
+  const [rows] = await db.execute("SELECT id,name,email,password_hash,role FROM users WHERE email=?", [email])
+  await db.end()
+  const u = rows?.[0]
+  if(!u || !(u.password_hash && bcrypt.compareSync(password, u.password_hash))){
+    return new NextResponse('Unauthorized', { status:401 })
+  }
+  const token = jwt.sign({ id:u.id, name:u.name, email:u.email, role:u.role }, process.env.JWT_SECRET, { expiresIn:'7d' })
+  const res = NextResponse.json({ ok:true })
+  res.cookies.set('token', token, { httpOnly:true, secure:true, sameSite:'lax', path:'/' })
   return res
 }

@@ -1,1 +1,6 @@
-export default { reactStrictMode:true, output:'standalone' }
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  experimental: {},
+}
+
+export default nextConfig

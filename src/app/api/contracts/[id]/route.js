@@ -1,6 +1,8 @@
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
+
 import { getDB } from '@/lib/db'
+import { NextResponse } from 'next/server'
 
 function toDate(v){ return (v instanceof Date) ? v : new Date(v) }
 function toISODate(v){ const d=toDate(v); if(!d||isNaN(d)) return ''; const y=d.getFullYear(); const m=String(d.getMonth()+1).padStart(2,'0'); const da=String(d.getDate()).padStart(2,'0'); return `${y}-${m}-${da}` }
@@ -27,4 +29,28 @@ export async function GET(req,{params}){
   items.forEach(it=>{ for(let i=1;i<=12;i++){ if(!grid[it.id][i]) grid[it.id][i]={ date:'', days_to_action:null } } })
   const itemsWithIndex = items.map((it,idx)=>({ ...it, item_index: idx+1 }))
   return new Response(JSON.stringify({ contract, company, items: itemsWithIndex, grid }), { headers:{'Content-Type':'application/json'} })
+}
+
+export async function PATCH(req,{params}){
+  const id=Number(params.id); const b=await req.json()
+  const allowed=['start_date','end_date','monthly_value','status','notes']
+  const sets=[]; const args=[]
+  for(const k of allowed){ if(k in b){ sets.push(`${k}=?`); args.push(b[k]||null) } }
+  if(!sets.length) return NextResponse.json({ok:true})
+  args.push(id)
+  const db=await getDB(); await db.execute(`UPDATE contracts SET ${sets.join(', ')} WHERE id=?`, args); await db.end()
+  return NextResponse.json({ok:true})
+}
+
+export async function DELETE(req,{params}){
+  const id=Number(params.id); const db=await getDB()
+  const [items]=await db.execute("SELECT id FROM contract_items WHERE contract_id=?", [id])
+  if(items.length){
+    const ids=items.map(x=>x.id); const placeholders=ids.map(()=>'?').join(',')
+    await db.execute(`DELETE FROM activities WHERE created_from='CONTRATO' AND related_id IN (${placeholders})`, ids)
+    await db.execute("DELETE FROM contract_items WHERE contract_id=?", [id])
+  }
+  await db.execute("DELETE FROM contracts WHERE id=?", [id])
+  await db.end()
+  return NextResponse.json({ok:true})
 }
