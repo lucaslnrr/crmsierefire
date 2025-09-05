@@ -23,3 +23,90 @@ export default function OrderDetail({ params }){
     </div>
   </div>)
 }
+
+// === Items Manager (inline) ===
+function ItemsManager({ orderId }){
+  const [items,setItems]=React.useState([])
+  const [services,setServices]=React.useState([])
+  const [form,setForm]=React.useState({ service_id:'', description:'', qty:1, unit_price:0 })
+
+  async function load(){
+    const [it, sv] = await Promise.all([
+      fetch(`/api/orders/${orderId}/items`).then(r=>r.json()),
+      fetch(`/api/services`).then(r=>r.json())
+    ])
+    setItems(it || [])
+    setServices(sv || [])
+  }
+  React.useEffect(()=>{ load() }, [orderId])
+
+  async function add(e){
+    e.preventDefault()
+    await fetch(`/api/orders/${orderId}/items`,{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(form)
+    })
+    setForm({ service_id:'', description:'', qty:1, unit_price:0 })
+    await load()
+  }
+  async function patch(it, p){
+    await fetch(`/api/orders/${orderId}/items/${it.id}`,{
+      method:'PATCH', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(p)
+    })
+    await load()
+  }
+  async function del(it){
+    if(!confirm('Excluir item?')) return
+    await fetch(`/api/orders/${orderId}/items/${it.id}`,{ method:'DELETE' })
+    await load()
+  }
+
+  return (
+    <div className="sf-card mt-4">
+      <h2 className="text-lg font-semibold mb-2">Itens do Pedido</h2>
+      <form onSubmit={add} className="grid sm:grid-cols-5 gap-2 items-end">
+        <div>
+          <label className="hdr">Serviço</label>
+          <select className="sf-input" value={form.service_id} onChange={e=>setForm({...form, service_id:e.target.value})}>
+            <option value="">Selecione</option>
+            {services.map(s=> <option key={s.id} value={s.id}>{s.name}</option>)}
+          </select>
+        </div>
+        <div>
+          <label className="hdr">Descrição</label>
+          <input className="sf-input" value={form.description} onChange={e=>setForm({...form, description:e.target.value})} />
+        </div>
+        <div>
+          <label className="hdr">Qtd</label>
+          <input type="number" min="1" className="sf-input" value={form.qty} onChange={e=>setForm({...form, qty:e.target.value})} />
+        </div>
+        <div>
+          <label className="hdr">Preço</label>
+          <input type="number" step="0.01" className="sf-input" value={form.unit_price} onChange={e=>setForm({...form, unit_price:e.target.value})} />
+        </div>
+        <button className="sf-btn primary">Adicionar</button>
+      </form>
+
+      <div className="overflow-auto mt-3">
+        <table className="sf-table text-sm">
+          <thead><tr><th>#</th><th>Serviço</th><th>Descrição</th><th>Qtd</th><th>Preço</th><th>Total</th><th></th></tr></thead>
+          <tbody>
+            {items.map(it => (
+              <tr key={it.id}>
+                <td>#{it.id}</td>
+                <td>{it.service_name || it.service_id || '—'}</td>
+                <td><input className="sf-input" defaultValue={it.description||''} onBlur={e=>patch(it,{ description: e.target.value })} /></td>
+                <td><input type="number" min="1" className="sf-input w-24" defaultValue={it.qty} onBlur={e=>patch(it,{ qty:e.target.value })} /></td>
+                <td><input type="number" step="0.01" className="sf-input w-28" defaultValue={it.unit_price} onBlur={e=>patch(it,{ unit_price:e.target.value })} /></td>
+                <td>R$ {(Number(it.qty)*Number(it.unit_price)).toFixed(2)}</td>
+                <td><button className="sf-btn danger" onClick={()=>del(it)}>Excluir</button></td>
+              </tr>
+            ))}
+            {!items.length && <tr><td colSpan="7" className="sf-muted">Sem itens</td></tr>}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
