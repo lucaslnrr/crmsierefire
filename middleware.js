@@ -12,6 +12,8 @@ export function middleware(req){
   const p = req.nextUrl.pathname
   if (p==='/' || p==='') return handleRoot(req)
   if (PUBLIC.some(x=>p.startsWith(x))) return NextResponse.next()
+  if (p.startsWith('/_next') || p.startsWith('/favicon.ico')) return NextResponse.next()
+
   const t = req.cookies.get('token')?.value
   if(!t) return NextResponse.redirect(new URL('/login', req.url))
   try{ jwt.verify(t, process.env.JWT_SECRET); return NextResponse.next() }catch(e){ return NextResponse.redirect(new URL('/login', req.url)) }

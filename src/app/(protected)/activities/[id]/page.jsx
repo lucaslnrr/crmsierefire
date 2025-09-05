@@ -6,7 +6,7 @@ export default function ActivityDetails({ params }){
   useEffect(()=>{ load() },[id])
   if(!data) return <div>Carregando...</div>
   return (<div className="space-y-4">
-    <div className="card"><div className="flex justify-end"><button className="btn" style={{background:'#dc2626'}} onClick={async()=>{ if(confirm('Excluir atividade?')){ await fetch(`/api/activities/${id}`,{method:'DELETE'}); window.location.href='/calendar' } }}>Excluir</button></div>
+    <div className="card"><div className="flex justify-end"><button className="btn danger" onClick={async()=>{ if(confirm('Excluir atividade?')){ await fetch(`/api/activities/${id}`,{method:'DELETE'}); window.location.href='/calendar' } }}>Excluir</button></div>
       <div className="grid md:grid-cols-3 gap-3">
         <div><div className="hdr">Título</div><div>{data.activity.title}</div></div>
         <div><div className="hdr">Empresa</div><div>{data.company?.nome||'—'}</div></div>

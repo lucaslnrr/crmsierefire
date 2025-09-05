@@ -16,13 +16,13 @@ export default function CalendarPage(){
   useEffect(()=>{ load() },[prof,status,doc,weekStart])
   return (<div className="space-y-4">
     <h1 className="text-2xl font-semibold">Calendário (semana)</h1>
-    <div className="card" style={{display:'grid',gridTemplateColumns:'repeat(4,minmax(0,1fr))',gap:12}}>
+    <div className="card grid md:grid-cols-4 gap-3">
       <div><label className="hdr">Profissional</label><select className="select" value={prof} onChange={e=>setProf(e.target.value)}><option value="">Todos</option>{users.map(u=><option key={u.id} value={u.id}>{u.name}</option>)}</select></div>
       <div><label className="hdr">Status</label><select className="select" value={status} onChange={e=>setStatus(e.target.value)}><option value="">Todos</option><option value="PENDENTE">Pendente</option><option value="EM_ATRASO">Em atraso</option><option value="CONCLUIDA">Concluída</option></select></div>
       <div><label className="hdr">CNPJ/CPF/CAEPF</label><input className="input" placeholder="Documento" value={doc} onChange={e=>setDoc(e.target.value)} /></div>
       <div className="flex items-end gap-2"><button className="btn" onClick={()=>setWeekStart(new Date(Date.now()-7*24*3600*1000))}>◀ Semana -1</button><button className="btn" onClick={()=>setWeekStart(new Date())}>Hoje</button><button className="btn" onClick={()=>setWeekStart(new Date(Date.now()+7*24*3600*1000))}>Semana +1 ▶</button></div>
     </div>
-    <div style={{display:'grid',gridTemplateColumns:'repeat(6,minmax(0,1fr))',gap:12}}>
+    <div className="cols-6">
       {days.map((d,i)=>{ const iso=d.toISOString().slice(0,10); const dayItems=items.filter(a=>String(a.start_datetime).slice(0,10)===iso); return (
         <div key={i} className="card">
           <div className="font-semibold">{d.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'2-digit'})}</div>

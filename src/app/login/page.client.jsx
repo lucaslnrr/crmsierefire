@@ -18,8 +18,8 @@ export default function LoginClient(){
       <div className="card">
         <h1 className="text-2xl font-semibold">Entrar</h1>
         <form className="space-y-3" onSubmit={submit}>
-          <div><div className="hdr">Email</div><input className="input" value={email} onChange={e=>setEmail(e.target.value)} /></div>
-          <div><div className="hdr">Senha</div><input type="password" className="input" value={password} onChange={e=>setPassword(e.target.value)} /></div>
+          <div><label className="hdr">Email</label><input className="input" value={email} onChange={e=>setEmail(e.target.value)} /></div>
+          <div><label className="hdr">Senha</label><input type="password" className="input" value={password} onChange={e=>setPassword(e.target.value)} /></div>
           {msg && <div style={{color:'#dc2626', fontSize:14}}>{msg}</div>}
           <button className="btn" type="submit">Entrar</button>
         </form>

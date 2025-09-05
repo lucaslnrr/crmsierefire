@@ -8,7 +8,6 @@ export async function POST(req,{params}){
   const db=await getDB()
   const [[c]] = await db.execute("SELECT * FROM contracts WHERE id=?", [id])
   const [items] = await db.execute("SELECT ci.*, s.name as service_name FROM contract_items ci JOIN services s ON s.id=ci.service_id WHERE ci.contract_id=?", [id])
-  // naive generate: one activity per month for 12 months from start_date
   for(const it of items){
     for(let i=0;i<12;i++){
       const d=new Date(c.start_date); d.setMonth(d.getMonth()+i); const when = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), 12,0,0))

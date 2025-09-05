@@ -1,5 +1,6 @@
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
+
 import { getDB } from '@/lib/db'
 
 export async function GET(){

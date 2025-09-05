@@ -12,7 +12,7 @@ export default function Orders(){
         <tbody>{list.map(o=>(<tr key={o.id}>
           <td>{o.order_number}</td><td>{o.company_nome}</td><td>{o.issue_date}</td><td>{o.due_date||'—'}</td><td>R$ {Number(o.total_value||0).toFixed(2)}</td><td>{o.status}</td>
           <td><a className="text-accent" href={`/orders/${o.id}`}>Abrir</a></td>
-          <td><button className="btn" style={{background:'#dc2626'}} onClick={async()=>{ if(confirm('Excluir pedido?')){ await fetch('/api/orders/'+o.id,{method:'DELETE'}); load() } }}>Excluir</button></td>
+          <td><button className="btn danger" onClick={async()=>{ if(confirm('Excluir pedido?')){ await fetch('/api/orders/'+o.id,{method:'DELETE'}); load() } }}>Excluir</button></td>
         </tr>))}</tbody>
       </table>
     </div>

@@ -6,7 +6,7 @@ export default function OrderDetail({ params }){
   useEffect(()=>{ load() },[id])
   if(!order) return <div>Carregando...</div>
   return (<div className="space-y-4">
-    <div className="flex justify-end"><button className="btn" style={{background:'#dc2626'}} onClick={async()=>{ if(confirm('Excluir pedido?')){ await fetch(`/api/orders/${id}`,{method:'DELETE'}); window.location.href='/orders' } }}>Excluir</button></div>
+    <div className="flex justify-end"><button className="btn danger" onClick={async()=>{ if(confirm('Excluir pedido?')){ await fetch(`/api/orders/${id}`,{method:'DELETE'}); window.location.href='/orders' } }}>Excluir</button></div>
     <div className="card grid md:grid-cols-4 gap-3">
       <div><div className="hdr">Pedido</div><div>#{order.order_number}</div></div>
       <div><div className="hdr">Empresa</div><div>{order.company_nome}</div></div>

@@ -1,6 +1,5 @@
 'use client'
-import { useEffect, useMemo, useState } from 'react'
-function addMonths(iso,n){ const d=new Date(iso); d.setMonth(d.getMonth()+n); return d.toISOString().slice(0,10) }
+import { useEffect, useState } from 'react'
 export default function Planner({ params }){
   const id=params.id; const [data,setData]=useState(null); const [saving,setSaving]=useState(false)
   async function load(){ const r=await fetch(`/api/contracts/${id}`); const j=await r.json(); setData(j) }

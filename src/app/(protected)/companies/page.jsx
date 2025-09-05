@@ -29,7 +29,7 @@ export default function Companies(){
                 <button className="btn" style={{opacity:.7,marginLeft:8}} onClick={()=>setEditing(null)}>Cancelar</button>
               </>) : (<>
                 <button className="btn" onClick={()=>setEditing(c.id)}>Editar</button>
-                <button className="btn" style={{background:'#dc2626',marginLeft:8}} onClick={async()=>{ if(confirm('Excluir empresa?')){ await fetch('/api/companies/'+c.id,{method:'DELETE'}); load() } }}>Excluir</button>
+                <button className="btn danger" style={{marginLeft:8}} onClick={async()=>{ if(confirm('Excluir empresa?')){ await fetch('/api/companies/'+c.id,{method:'DELETE'}); load() } }}>Excluir</button>
               </>)}
             </td>
           </tr>))}

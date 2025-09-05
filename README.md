@@ -1,15 +1,22 @@
-# Propostas & Atividades — v0.6.2 (Auth-guarded)
+# Propostas & Atividades — v0.6.2 (bundle completo)
 
-## Quick start
-1. Copy `.env.example` → `.env` and fill DB + JWT_SECRET.
-2. Create DB tables with `db/create_tables.sql` (phpMyAdmin).
-3. Insert a user row into `users` with a bcrypt hash in `password_hash`.
-4. `npm i` then `npm run dev` (local). Push to Vercel for deploy.
+## Como rodar
+1. Copie `.env.example` para `.env` e preencha:
+   - `DB_HOST, DB_PORT, DB_USER, DB_PASS, DB_NAME` (HostGator)
+   - `JWT_SECRET` (string longa e aleatória)
+2. No phpMyAdmin, execute `db/create_tables.sql`.
+3. Insira pelo menos 1 usuário em `users` com `password_hash` em **bcrypt** (posso gerar o SQL se me passar email/senha).
+4. `npm i` e depois `npm run dev` (local). Para Vercel, suba o código e configure as mesmas variáveis de ambiente.
 
-## Auth
-- All routes enforced by `middleware.js` and `(protected)/layout.jsx`.
-- `/login` is public; it redirects to `/dashboard` if already logged.
+## Auth e navegação
+- `middleware.js` protege tudo (exceto `/login`, `/api/auth/login`, `/api/auth/logout`).
+- `src/app/page.jsx` redireciona `/` → `/login` (sem cookie) ou `/dashboard` (com cookie).
+- Layout protegido em `src/app/(protected)/layout.jsx` re-checa o JWT (server-side) e exibe a navbar.
 
-## Notes
-- APIs are marked `runtime='nodejs'` & `dynamic='force-dynamic'` to avoid DB calls at build-time on Vercel.
-- Basic CRUD on companies, proposals (incl. approve→activity+order), activities, contracts (planner), orders.
+## Rotas principais
+- Páginas: `/dashboard`, `/calendar`, `/companies`, `/proposals`, `/contracts`, `/contracts/[id]/planner`, `/orders`, `/orders/[id]`, `/activities/[id]`
+- APIs: users, companies, services, proposals (aprovar → cria activity + pedido), contracts (+planner), orders, activities.
+
+## Observações
+- Todas as APIs têm `runtime = 'nodejs'` e `dynamic='force-dynamic'` para não tentar conectar no build da Vercel.
+- CSS simples em `globals.css` (navbar fixa, cards, tabelas, formulários).

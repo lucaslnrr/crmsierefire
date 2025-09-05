@@ -22,7 +22,7 @@ export default function Contracts(){
         <tbody>{list.map(c=>(<tr key={c.id}>
           <td>{c.id}</td><td>{c.company_nome}</td><td>{c.start_date?.slice(0,10)||''}</td><td>{c.end_date?.slice(0,10)||''}</td><td>R$ {Number(c.monthly_value||0).toFixed(2)}</td><td>{c.status}</td>
           <td><Link href={`/contracts/${c.id}/planner`}>Abrir</Link></td>
-          <td style={{textAlign:'right'}}><button className="btn" style={{background:'#dc2626'}} onClick={async()=>{ if(confirm('Excluir contrato? Isso também removerá atividades do planner.')){ await fetch('/api/contracts/'+c.id,{method:'DELETE'}); load() } }}>Excluir</button></td>
+          <td style={{textAlign:'right'}}><button className="btn danger" onClick={async()=>{ if(confirm('Excluir contrato? Isso também removerá atividades do planner.')){ await fetch('/api/contracts/'+c.id,{method:'DELETE'}); load() } }}>Excluir</button></td>
         </tr>))}</tbody>
       </table>
     </div>

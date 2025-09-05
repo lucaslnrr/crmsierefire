@@ -10,9 +10,9 @@ export default function ProtectedLayout({ children }){
   return (
     <html lang="pt-BR">
       <body>
-        <nav className="bg-white border-b border-gray-200">
-          <div className="container h-14 flex items-center justify-between">
-            <div className="nav">
+        <nav className="navbar">
+          <div className="container inner">
+            <div className="left">
               <Link href="/dashboard">Dashboard</Link>
               <Link href="/calendar">Calendário</Link>
               <Link href="/companies">Empresas</Link>
@@ -20,9 +20,9 @@ export default function ProtectedLayout({ children }){
               <Link href="/contracts">Contratos</Link>
               <Link href="/orders">Pedidos</Link>
             </div>
-            <form action="/api/auth/logout" method="post">
-              <button className="text-sm" style={{color:'#dc2626'}}>Sair</button>
-            </form>
+            <div className="right">
+              <form action="/api/auth/logout" method="post"><button className="btn danger">Sair</button></form>
+            </div>
           </div>
         </nav>
         <main className="container py-6">{children}</main>

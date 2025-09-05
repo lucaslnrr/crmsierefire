@@ -32,7 +32,7 @@ export default function Proposals(){
                   load()
                 }
               }}>Editar</button>
-              <button className="btn" style={{background:'#dc2626', marginLeft:8}} onClick={async()=>{
+              <button className="btn danger" style={{marginLeft:8}} onClick={async()=>{
                 if(confirm('Excluir proposta?')){
                   const r=await fetch('/api/proposals/'+p.id,{method:'DELETE'})
                   if(r.ok) load(); else alert('Não foi possível excluir (pode haver Pedido vinculado).')
