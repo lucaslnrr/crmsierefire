@@ -1,8 +1,9 @@
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
 import { getDB } from '@/lib/db'
 import { getUserFromCookie } from '@/lib/auth'
 import Link from 'next/link'
+
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 async function getData(){
   const db=await getDB()

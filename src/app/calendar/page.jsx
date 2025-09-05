@@ -50,9 +50,7 @@ export default function CalendarPage(){
                    else setRefDate(new Date(refDate.getFullYear(), refDate.getMonth()+1, 1)) }
   function today(){ setRefDate(new Date()) }
 
-  const byDay = useMemo(()=>{
-    const m = {}; for(const a of items){ const iso=getISODate(a.start_datetime); (m[iso]??=[]).push(a) } return m
-  },[items])
+  const byDay = useMemo(()=>{ const m = {}; for(const a of items){ const iso=getISODate(a.start_datetime); (m[iso]??=[]).push(a) } return m },[items])
 
   function exportCSV(){
     const headers = ['Data','Hora','Cliente','Profissional','Título','Status','Documento']
