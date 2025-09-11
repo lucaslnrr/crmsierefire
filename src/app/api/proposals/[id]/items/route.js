@@ -4,7 +4,7 @@ export const dynamic = 'force-dynamic'
 import { NextResponse } from 'next/server'
 import { getDB } from '@/lib/db'
 
-// List items OR create item
+// List items
 export async function GET(req, { params }){
   const id = Number(params.id)
   const db = await getDB()
@@ -22,6 +22,7 @@ export async function GET(req, { params }){
   }
 }
 
+// Create item
 export async function POST(req, { params }){
   const id = Number(params.id)
   const body = await req.json()

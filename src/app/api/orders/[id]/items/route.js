@@ -39,9 +39,10 @@ export async function POST(req, { params }){
       const [[s]] = await db.execute("SELECT name FROM services WHERE id=?",[service_id])
       description = s?.name || null
     }
+    const total_price = qty * unit_price
     const [r] = await db.execute(
-      "INSERT INTO sales_order_items (order_id, service_id, description, qty, unit_price, total_price) VALUES (?,?,?,?,?, qty*unit_price)",
-      [ id, service_id, description, qty, unit_price ]
+      "INSERT INTO sales_order_items (order_id, service_id, description, qty, unit_price, total_price) VALUES (?,?,?,?,?, ?)",
+      [ id, service_id, description, qty, unit_price, total_price ]
     )
     await recalc(db, id)
     return NextResponse.json({ id: r.insertId })

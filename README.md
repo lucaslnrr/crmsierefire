@@ -14,7 +14,16 @@
 - Layout protegido em `src/app/(protected)/layout.jsx` re-checa o JWT (server-side) e exibe a navbar.
 
 ## Rotas principais
-- Páginas: `/dashboard`, `/calendar`, `/companies`, `/proposals`, `/contracts`, `/contracts/[id]/planner`, `/orders`, `/orders/[id]`, `/activities/[id]`
+- Páginas:
+  - `/dashboard`
+  - `/calendar`
+  - `/companies`
+  - `/proposals`
+  - `/contracts`
+  - `/contracts/[id]/planner`
+  - `/orders`
+  - `/orders/[id]`
+  - `/activities/[id]`
 - APIs: users, companies, services, proposals (aprovar → cria activity + pedido), contracts (+planner), orders, activities.
 
 ## Observações
